@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>自我學習聽聲辨位網站(兒童)</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <h2>自我學習聽聲辨位系統操作頁面</h1>
+        <!-- <p class="impWord">*播放完畢會自動關閉投影*</p> -->
+
+        <section>
+            <div>步驟 1.配對ESP32_Audio
+                <h3 id="displayState_Audio">等待配對...</h3>
+                <button id="scanAudio">配對ESP32_Audio</button>
+            </div>
+            <div>步驟 2.開啟投影畫面
+                <h3 id="displayState_Presentate">等待投影...</h3>
+                <button id="start">開啟投影畫面</button>
+                <button id="terminate">關閉投影畫面</button>
+            </div>
+            <!-- <div>3.
+                <button id="scanJY901">配對ESP32_JY901</button>
+                <button id="disconnectJY901">斷開ESP32_JY901</button>
+                <div id="displayState_JY901">等待配對...</div>
+                <div id="dataJY901" class="dataJY901">等待數據...</div>
+                <button id="exportJY901data">匯出JY901訊號</button>
+            </div> -->
+            <div>
+                <p class="boldWord">已播放的方向:</p>
+                <div id="videoNameContainer"></div>
+            </div>
+
+            <!-- 匯出影檔播放的時間 -->
+            <button id="exportAudioName">匯出音源播放時間</button>
+        </section>
+
+        <aside>
+            <!-- <p class="boldWord" id="displayTime">現在時間:</p> -->
+            步驟 3. >
+            <button id="playVideo" name="playVideo">開始播放</button>
+            <h3>即時顯示投影的播放狀態：</h3>
+            <div id="output" class="output">
+                <div id="content" class="log"></div>
+                <div id="status" class="log"></div>
+                <pre id="log"></pre>
+            </div>
+        </aside>
+
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+        <script src="script.js"></script>
+        <script src="logScript.js"></script>
+</body>
+
+</html>
