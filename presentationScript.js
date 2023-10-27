@@ -3,17 +3,17 @@
 // 影片檔案的路徑
 var videos = [
     'video/D1.mp4',
-    // 'video/D2.mp4',
-    // 'video/D3.mp4',
-    // 'video/L1.mp4',
-    // 'video/L2.mp4',
-    // 'video/L3.mp4',
-    // 'video/R1.mp4',
-    // 'video/R2.mp4',
-    // 'video/R3.mp4',
-    // 'video/U1.mp4',
-    // 'video/U2.mp4',
-    // 'video/U3.mp4'
+    'video/D2.mp4',
+    'video/D3.mp4',
+    'video/L1.mp4',
+    'video/L2.mp4',
+    'video/L3.mp4',
+    'video/R1.mp4',
+    'video/R2.mp4',
+    'video/R3.mp4',
+    'video/U1.mp4',
+    'video/U2.mp4',
+    'video/U3.mp4'
 ];
 
 
