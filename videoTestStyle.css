@@ -1,0 +1,49 @@
+section {
+    float: left;
+    width: 30%;
+}
+
+aside {
+    float: right;
+    width: 70%;
+}
+
+button {
+    padding: 8px;
+    width: auto;
+    height: 40px;
+    border: 10;
+    background-color: #3B7C78;
+    color: #fff;
+    font-size: 18px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #fff;
+    color: #3B7C78;
+    border: 2px #3B7C78 solid;
+}
+
+pre {
+    margin: 0;
+}
+
+.output {
+    background-color: #f0f0f0;
+    border-radius: 10px;
+    display: block;
+    padding: 10px;
+}
+
+.log {
+    padding: 0;
+}
+
+
+
+video {
+    width: 100%;
+    height: auto;
+}

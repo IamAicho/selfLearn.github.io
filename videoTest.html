@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="videoTestStyle.css">
+    <title>影片模擬播放測試</title>
+</head>
+
+<body>
+    <h2>自我學習聽聲辨位系統操作頁面(測試用)
+        <a href="index.html"> > 實驗用</a>
+    </h2>
+
+    <section>
+        <button id="playVideo">開始播放</button>
+        <button id="pauseVideo">結束播放</button>
+        <h3>投影的播放狀態：</h3>
+        <div id="output" class="output">
+            <div id="content" class="log"></div>
+            <div id="status" class="log"></div>
+            <pre id="log"></pre>
+        </div>
+    </section>
+
+    <aside>
+        <h3>投影的播放畫面模擬：</h3>
+        <video id="videoPlayer" controls></video>
+    </aside>
+
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+    <script src="videoTestScript.js"></script>
+    <script src="logScript.js"></script>
+</body>
+
+</html>
