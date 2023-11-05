@@ -103,29 +103,21 @@ $("#pauseVideo").on('click', function () {
 
 var videosL = [
     'video/L1.mp4',
-    'video/L2.mp4',
-    'video/L3.mp4',
     'video/L4.mp4',
     'video/L5.mp4'
 ];
 var videosR = [
     'video/R1.mp4',
-    'video/R2.mp4',
-    'video/R3.mp4',
     'video/R4.mp4',
     'video/R5.mp4'
 ];
 var videosU = [
     'video/U1.mp4',
-    'video/U2.mp4',
-    'video/U3.mp4',
     'video/U4.mp4',
     'video/U5.mp4'
 ];
 var videosD = [
     'video/D1.mp4',
-    'video/D2.mp4',
-    'video/D3.mp4',
     'video/D4.mp4',
     'video/D5.mp4'
 ];
@@ -133,28 +125,28 @@ var videosD = [
 $("#leftSpeaker").on('click', function () {
     log('左方聲音');
     let shuffledVideos = shuffleArray(videosL.slice());
-    videoPlayer.src = shuffledVideos[Math.floor(Math.random() * 5)];
+    videoPlayer.src = shuffledVideos[Math.floor(Math.random() * 3)];
     console.log(videoPlayer.src);
     videoPlayer.play();
 });
 $("#rightSpeaker").on('click', function () {
     log('右方聲音');
     let shuffledVideos = shuffleArray(videosR.slice());
-    videoPlayer.src = shuffledVideos[Math.floor(Math.random() * 5)];
+    videoPlayer.src = shuffledVideos[Math.floor(Math.random() * 3)];
     console.log(videoPlayer.src);
     videoPlayer.play();
 });
 $("#upSpeaker").on('click', function () {
     log('上方聲音');
     let shuffledVideos = shuffleArray(videosU.slice());
-    videoPlayer.src = shuffledVideos[Math.floor(Math.random() * 5)];
+    videoPlayer.src = shuffledVideos[Math.floor(Math.random() * 3)];
     console.log(videoPlayer.src);
     videoPlayer.play();
 });
 $("#downSpeaker").on('click', function () {
     log('下方聲音');
     let shuffledVideos = shuffleArray(videosD.slice());
-    videoPlayer.src = shuffledVideos[Math.floor(Math.random() * 5)];
+    videoPlayer.src = shuffledVideos[Math.floor(Math.random() * 3)];
     console.log(videoPlayer.src);
     videoPlayer.play();
 });
