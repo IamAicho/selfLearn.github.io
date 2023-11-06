@@ -56,13 +56,13 @@ function playNextVideo() {
     let videoName = videoPlayer.src;
     if (currentVideoIndex < shuffledVideos.length) {
         // 判斷該播放的聲音方向
-        if (videoName.includes('D')) {
+        if (videoName.includes('video/D')) {
             currentVideoName = '下方';
-        } else if (videoName.includes('L')) {
+        } else if (videoName.includes('video/L')) {
             currentVideoName = '左方';
-        } else if (videoName.includes('R')) {
+        } else if (videoName.includes('video/R')) {
             currentVideoName = '右方';
-        } else if (videoName.includes('U')) {
+        } else if (videoName.includes('video/U')) {
             currentVideoName = '上方';
         }
         videoPlayer.load();
