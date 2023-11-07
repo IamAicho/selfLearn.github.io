@@ -72,7 +72,10 @@ function playNextVideo() {
         
 
         // 影片播放結束事件
-        videoPlayer.addEventListener('ended', playNextVideo);
+        let loopVideos = document.getElementById("videoPlayer");
+        loopVideos.onended = function () {
+            playNextVideo();
+        };
     } else {
         // 所有影檔播放完畢，將索引歸零並重新整理播放順序
         videoPlayer.src = '';
@@ -97,6 +100,11 @@ $("#pauseVideo").on('click', function () {
     shuffledVideos = shuffleArray(videos.slice());
     console.log('> 結束播放');
     log('> 結束播放');
+});
+
+$("#cleanLog").on('click', function () {
+    console.log('清除播放狀態(LOG)');
+    chromeSamples.clearLog();
 });
 
 
@@ -128,6 +136,7 @@ $("#leftSpeaker").on('click', function () {
     videoPlayer.src = shuffledVideos[Math.floor(Math.random() * 3)];
     console.log(videoPlayer.src);
     videoPlayer.play();
+    onendedVideo();
 });
 $("#rightSpeaker").on('click', function () {
     log('右方聲音');
@@ -135,6 +144,7 @@ $("#rightSpeaker").on('click', function () {
     videoPlayer.src = shuffledVideos[Math.floor(Math.random() * 3)];
     console.log(videoPlayer.src);
     videoPlayer.play();
+    onendedVideo();
 });
 $("#upSpeaker").on('click', function () {
     log('上方聲音');
@@ -142,6 +152,7 @@ $("#upSpeaker").on('click', function () {
     videoPlayer.src = shuffledVideos[Math.floor(Math.random() * 3)];
     console.log(videoPlayer.src);
     videoPlayer.play();
+    onendedVideo();
 });
 $("#downSpeaker").on('click', function () {
     log('下方聲音');
@@ -149,4 +160,12 @@ $("#downSpeaker").on('click', function () {
     videoPlayer.src = shuffledVideos[Math.floor(Math.random() * 3)];
     console.log(videoPlayer.src);
     videoPlayer.play();
+    onendedVideo();
 });
+
+function onendedVideo(string) {
+    let oneVideo = document.getElementById("videoPlayer");
+    oneVideo.onended = function () {
+        log('END');
+    };
+}
