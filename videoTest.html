@@ -22,16 +22,21 @@
             <div id="status" class="log"></div>
             <pre id="log"></pre>
         </div>
+        <button id="cleanLog">清除</button>
     </section>
 
     <aside>
-        <div>
-            <button id="leftSpeaker">左</button>
-            <button id="rightSpeaker">右</button>
-            <button id="upSpeaker">上</button>
-            <button id="downSpeaker">下</button>
+        <div id="directionButtons">
+            <div>
+                <button id="upSpeaker">上</button>
+            </div>
+            <div>
+                <button id="leftSpeaker">左</button>
+                <button id="downSpeaker">下</button>
+                <button id="rightSpeaker">右</button>
+            </div>
         </div>
-        <h3>投影的播放畫面模擬：</h3>
+        <br>
         <video id="videoPlayer" controls></video>
     </aside>
 
