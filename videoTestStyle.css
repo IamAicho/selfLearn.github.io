@@ -31,10 +31,14 @@ pre {
 }
 
 .output {
+    height: 60vh;
+    overflow: auto;
     background-color: #f0f0f0;
     border-radius: 10px;
     display: block;
+    margin-right: 10px;
     padding: 10px;
+    overflow: auto;
 }
 
 .log {
