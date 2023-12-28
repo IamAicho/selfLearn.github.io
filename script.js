@@ -320,22 +320,25 @@ navigator.presentation.defaultRequest = presentationRequest;
 
 // 判斷網頁是否可以開啟投影。
 $(function () {
-    presentationRequest.getAvailability()
-        .then(availability => {
-            // 當投影設備可用性發生變化時觸發。
-            availability.addEventListener('change', function () {
-                if (availability.value) {
-                    console.log('> 可支援投影： ' + availability.value);
-                } else {
-                    console.log('> 不可支援投影： ' + availability.value);
-                    $("#status").text('> 目前設備不可支援投影');
-                }
+    if (isProjecting == false) {
+        presentationRequest.getAvailability()
+            .then(availability => {
+                // 當投影設備可用性發生變化時觸發。
+                availability.addEventListener('change', function () {
+                    if (availability.value) {
+                        console.log('> 可支援投影： ' + availability.value);
+                        $("#status").text('> 目前設備可支援投影');
+                    } else {
+                        console.log('> 不可支援投影： ' + availability.value);
+                        $("#status").text('> 目前設備不可支援投影');
+                    }
+                });
+            })
+            .catch(error => {
+                $("#status").text('> 投影失敗，目前設備不可支援投影');
+                console.log('> 不支援投影，' + error.name + ': ' + error.message);
             });
-        })
-        .catch(error => {
-            $("#status").text('> 投影失敗，目前設備不可支援投影');
-            console.log('> 不支援投影，' + error.name + ': ' + error.message);
-        });
+    }
 })
 
 let isProjecting = false; // 追蹤投影狀態
