@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <title>Experimental web interface</title> -->
+    <title>展示用網頁</title>
+    <!-- w3 的樣式 -->
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <!-- icon 圖的 CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- google fonts 字型套用連結 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="title ">
+        <h1>自我學習聽聲辨位系統操作頁面</h1>
+    </div>
+    <div class="content">
+        <div class="leftSide">
+            <div>
+                <div class="button_btConnect" id="scanAudio">
+                    <div class="w3-padding w3-xlarge">
+                        <i class="fa fa-bluetooth-b"></i>
+                        <!-- Audio -->
+                        音訊切換器
+                    </div>
+                </div>
+                <div class="button_btDisconnect" id="disconnectAudio" style="display:none">
+                    <i class="fa fa-bluetooth-b"></i>
+                    斷開
+                </div>
+            </div>
+
+            <div class="button_control">
+                <div class="button_projec">
+                    <div class="button w3-padding" id="projecOpen">開啟投影</div>
+                    <div class="button w3-padding" id="projecClose">關閉投影</div>
+                </div>
+                <div class="button_random">
+                    <!-- <div class="button w3-padding" id="playRandomVideo">PLAY</div>
+                        <div class="button w3-padding" id="pauseVideo">PAUSE</div> -->
+                    <div class="button w3-padding" id="playRandomVideo">隨機播放</div>
+                    <div class="button w3-padding" id="pauseVideo">停止</div>
+                </div>
+            </div>
+
+            <div class="button_directions" style="display:none">
+                <div class="w3-margin w3-padding w3-xlarge w3-text-black">
+                    <i class="button_direction fa-solid fa-arrow-up" id="upSpeaker"></i><br>
+                    <i class="button_direction fa-solid fa-arrow-left" id="leftSpeaker"></i>
+                    <i class="button_direction fa-solid fa-arrow-down" id="downSpeaker"></i>
+                    <i class="button_direction fa-solid fa-arrow-right" id="rightSpeaker"></i>
+                </div>
+            </div>
+            <hr style="margin: 5px; border-top: 2px dashed">
+            <p>當前音量：
+                <span id="vol">1.0</span>
+            </p>
+            <div class="contentVid">
+                <div class="btnVol">
+                    <button class="button btnVol" onclick="setFullVolume()" type="button">音量 1.0</button>
+                    <button class="button btnVol" onclick="setQuartersVolume()" type="button">音量 0.75</button>
+                    <button class="button btnVol" onclick="setHalfVolume()" type="button">音量 0.5</button>
+                    <button class="button btnVol" onclick="setQuarterVolume()" type="button">音量 0.25</button>
+                </div>
+                <div class="vid">
+                    <video id="videoPlayer" height="150px" controls></video>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="rightSide">
+            <div>
+                <!-- <p class="p_status">Playing status :</p> -->
+                <p class="p_status">聲音播放紀錄：</p>
+                <div class="output">
+                    <!-- <div id="content" style="color: red;">Please connect Bluetooth First!!</div>
+                    <div id="status">Select Frequency</div> -->
+                    <div id="content" style="color: red; font-weight: bold;">請先連接藍芽裝置！</div>
+                    <div id="status">＜ 請開啟投影</div>
+                    <pre id="log"></pre>
+                </div>
+                <!-- <button class="button" id="cleanLog">Clean</button> -->
+                <button class="button" id="cleanLog">清除紀錄</button>
+                <button class="button" id="saveLog">儲存紀錄</button>
+            </div>
+
+        </div>
+    </div>
+
+
+
+    <script src="https://kit.fontawesome.com/66d48061b3.js" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+    <script src="logScript.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>

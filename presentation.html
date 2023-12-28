@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>投影頁面</title>
+
+    <style>
+        html,
+        body {
+            background: #000;
+            overflow: hidden;
+            margin: 0;
+        }
+
+        #videoPlayer {
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <video id="videoPlayer" muted></video>
+
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+    <script>
+        $(function () {
+            // 檢查是否支援展示接收功能。
+            if (navigator.presentation.receiver) {
+                // 獲取展示連接列表。
+                navigator.presentation.receiver.connectionList.then(list => {
+                    // 將現有的連接添加到列表中。
+                    list.connections.map(connection => addConnection(connection));
+                    // 監聽連接可用事件，當有新的連接可用時觸發。
+                    list.addEventListener('connectionavailable', function (event) {
+                        // 添加新的連接到列表中。
+                        addConnection(event.connection);
+                    });
+                });
+            }
+        });
+
+        // 此函式為, 添加一個新的展示連接。
+        function addConnection(connection) {
+            // 監聽連接的 "message" 事件，當收到消息時觸發。
+            connection.addEventListener('message', function (event) {
+                // 解析收到的 JSON 格式的消息。
+                const receivedMessage = JSON.parse(event.data);
+                // 回傳到收到的字串至主頁
+                connection.send(receivedMessage.message);
+
+                let str = receivedMessage.message;
+                if (str.includes('video/')) {
+                    let videoName;
+                    const substrings = ['U', 'L', 'D', 'R'];
+                    for (const substring of substrings) {
+                        if (str.includes('video/' + substring)) {
+                            videoName = 'video/' + substring;
+                            break; // 找到後跳出迴圈
+                        }
+                    }
+                    for (let i = 1; i <= 5; i++) {
+                        const searchString = videoName + i;
+                        if (str.includes(searchString)) {
+                            videoName = searchString + '.mp4';
+                            videoPlayer.src = videoName;
+                            break; // 找到後跳出迴圈
+                        }
+                    }
+                    videoPlayer.load();
+                    videoPlayer.play();
+                } else if (str.includes('pauseVideo')) {
+                    videoPlayer.pause();
+                    videoPlayer.src = '';
+                }
+
+            });
+        };
+
+    </script>
+</body>
+
+</html>
