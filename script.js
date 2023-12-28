@@ -164,8 +164,8 @@ function playRandomVideo() {
         videoPlayer.src = '';
         currentVideoIndex = 0;
         currentVideoName = '';
-        console.log('> 結束播放');
-        log('> 結束播放');
+        console.log('> 結束隨機播放');
+        log('> 結束隨機播放');
         shuffledVideos = shuffleArray(videos.slice())
     }
 };
