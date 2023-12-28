@@ -195,6 +195,7 @@ $("#pauseVideo").on('click', function () {
         currentVideoName = '';
         console.log('> 停止播放');
         log('> 停止播放');
+        shuffledVideos = shuffleArray(videos.slice())
     } else {
         console.log('視頻原本就已暫停或停止');
     }
