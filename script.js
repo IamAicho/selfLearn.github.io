@@ -35,10 +35,8 @@ $(function () {
                 const server = await deviceAudio.gatt.connect();
                 const service = await server.getPrimaryService(servAudio_uuid);
                 characteristicAudio = await service.getCharacteristic(charAudio_uuid);
-                $('#scanAudio').on('mouseenter', function () {
-                    $(this).css('color', '#fff');
-                    $(this).css('background', '#02457a');
-                });
+                $('#scanAudio').css('color', '#fff');
+                $('#scanAudio').css('background', '#02457a');
                 $('#scanAudio').on('mouseleave', function () {
                     $(this).css('color', '#fff');
                     $(this).css('background', '#02457a');
