@@ -21,11 +21,11 @@ p {
     justify-content: space-around;
     /* 通常會故意兩邊留白: 固定尺寸 */
     padding: 20px 15px;
-    background: #ebcdc3;
-    width: 85%;
-    /* height: 85vh; */
+    background: #c6e1b6;
+    width: 1100px;
+    height: 650px;
     border: 4px solid;
-    border-color: #a17a69;
+    border-color: #3b7c78;
     border-radius: 30px;
     margin: 10px auto;/* 適合用在大容器裡的居中(auto 只用在 margin 的左右, padding 沒有這樣的寫法) */
     overflow: auto;
@@ -65,20 +65,20 @@ p {
 }
 
 .button_control {
-    font-size: 25px;
+    font-size: 30px;
 }
 
 .button {
     display: inline-block;
     background: #fff;
     border: 2px solid;
-    border-color: #a17a69;
+    border-color: #3b7c78;
     border-radius: 10px;
     margin: 15px 0;
     cursor: pointer;
 }
 .button:hover {
-    background-color: #a17a69;
+    background-color: #3b7c78;
     color: #fff;
     border: 2px #fff solid;
 }
@@ -92,27 +92,27 @@ p {
 .button_direction {
     background: #fff;
     border: 2px solid;
-    border-color: #a17a69;
+    border-color: #3b7c78;
     border-radius: 10px;
     margin: 5px 0;
     padding: 15px 15px;
     cursor: pointer;
 }
 .button_direction:hover {
-    background-color: #a17a69;
+    background-color: #3b7c78;
     color: #fff;
     border: 2px #fff solid;
 }
 
 .p_status {
-    font-size: x-large;
+    font-size: xx-large;
     font-weight: bold;
     margin: 10px 0;
 }
 
 .output {
-    height: 380px;
-    background-color: #e8dbd5;
+    height: 450px;
+    background-color: #fff;
     border-radius: 10px;
     display: block;
     padding: 10px;
@@ -131,7 +131,26 @@ pre {
     align-items: center; /* 圖和字切軸置中 */
 }
 
-.btnVol {
+/* .btnVol {
     margin: 3px;
     padding: 3px 5px;
+} */
+
+/* .volLeft {
+    display:inline-block;
+    border-top: 25px solid transparent;
+    border-bottom: 25px solid transparent;
+    border-right: 40px solid #00DDDD;
+}
+.volRight {
+    display:inline-block;
+    border-top: 25px solid transparent;
+    border-bottom: 25px solid transparent;
+    border-left: 40px solid #00DDDD;
+} */
+
+.volControl {
+    display:inline-block;
+    color: #3b7c78;
+    cursor: pointer;
 }
