@@ -16,6 +16,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700&display=swap"
         rel="stylesheet">
 
+    <!-- 防止 error : GET http://127.0.0.1:5502/favicon.ico 404 (Not Found) 
+        FROM: favicon.ico:1 -->
     <link rel="icon" href="data:,">
     <link rel="stylesheet" href="style.css">
 </head>
@@ -62,18 +64,29 @@
                 </div>
             </div>
             <hr style="margin: 5px; border-top: 2px dashed">
-            <p>當前音量：
-                <span id="vol">1.0</span>
-            </p>
             <div class="contentVid">
-                <div class="btnVol">
-                    <button class="button btnVol" onclick="setFullVolume()" type="button">音量 1.0</button>
-                    <button class="button btnVol" onclick="setQuartersVolume()" type="button">音量 0.75</button>
-                    <button class="button btnVol" onclick="setHalfVolume()" type="button">音量 0.5</button>
-                    <button class="button btnVol" onclick="setQuarterVolume()" type="button">音量 0.25</button>
+                <!-- <p>當前音量：
+                    <span id="vol">10</span>
+                </p> -->
+                <!-- <div class="btnVol">
+                    <button class="button btnVol" onclick="setFullVolume()" type="button">音量 10</button>
+                    <button class="button btnVol" onclick="setQuartersVolume()" type="button">音量 7.5</button>
+                    <button class="button btnVol" onclick="setHalfVolume()" type="button">音量 5</button>
+                    <button class="button btnVol" onclick="setQuarterVolume()" type="button">音量 2.5</button>
+                </div> -->
+                <div class="w3-padding w3-xxxlarge">
+                    <div class="volControl" onclick="setVolumeLow()">
+                        <i class="fa-solid fa-caret-left fa-2xl"></i>－
+                    </div>
+                    <span id="vol"></span>
+                    <div class="volControl" onclick="setVolumeHigh()">
+                        ＋<i class="fa-solid fa-caret-right fa-2xl"></i>
+                    </div>
                 </div>
+
                 <div class="vid">
-                    <video id="videoPlayer" height="150px" poster="cycubme.jpg"></video>
+                    <!-- <video id="videoPlayer" height="150px" controls></video> -->
+                    <video id="videoPlayer" height="200px" poster="/image/雅文logo2.png"></video>
                 </div>
             </div>
 
@@ -91,8 +104,8 @@
                     <pre id="log"></pre>
                 </div>
                 <!-- <button class="button" id="cleanLog">Clean</button> -->
-                <button class="button" id="cleanLog">清除紀錄</button>
-                <button class="button" id="saveLog">儲存紀錄</button>
+                <button class="button w3-xlarge" id="cleanLog">清除紀錄</button>
+                <button class="button w3-xlarge" id="saveLog">儲存紀錄</button>
             </div>
 
         </div>
