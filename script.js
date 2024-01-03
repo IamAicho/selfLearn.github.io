@@ -155,7 +155,7 @@ function playRandomVideo() {
         videoPlayer.play();
         currentVideoIndex++;
         console.log(currentVideoIndex + ', ' + String(videoName));
-        log(currentVideoIndex + ', ' + currentVideoName + ', ' + videoPlayer.volume);
+        log(currentVideoIndex + ', ' + currentVideoName + ', ' + $('#vol').text());
 
         let loopVideos = document.getElementById("videoPlayer");
         // 影片播放結束事件
@@ -205,21 +205,45 @@ $("#pauseVideo").on('click', function () {
     }
 });
 
-function setFullVolume() {
-    $("#vol").text('1.0');
-    videoPlayer.volume = 1.0;
+// function setFullVolume() {
+//     $("#vol").text(videoPlayer.volume*10);
+//     videoPlayer.volume = 1.0;
+// }
+// function setQuartersVolume() {
+//     $("#vol").text(videoPlayer.volume*10);
+//     videoPlayer.volume = 0.75;
+// }
+// function setHalfVolume() {
+//     $("#vol").text(videoPlayer.volume*10);
+//     videoPlayer.volume = 0.5;
+// }
+// function setQuarterVolume() {
+//     $("#vol").text(videoPlayer.volume*10);
+//     videoPlayer.volume = 0.25;
+// }
+videoPlayer.volume = 0.5;
+$("#vol").text(parseInt(videoPlayer.volume * 10));
+console.log(videoPlayer.volume);
+let volume;
+function setVolumeLow() {
+    if (parseFloat(videoPlayer.volume.toFixed(1)) >= 0.1) {
+        videoPlayer.volume -= 0.1;
+    } else {
+        videoPlayer.volume = 0;
+    }
+    console.log(videoPlayer.volume);
+    volume = parseInt(videoPlayer.volume.toFixed(1) * 10);
+    $("#vol").text(parseInt(volume));
 }
-function setQuartersVolume() {
-    $("#vol").text('0.75');
-    videoPlayer.volume = 0.75;
-}
-function setHalfVolume() {
-    $("#vol").text('0.5');
-    videoPlayer.volume = 0.5;
-}
-function setQuarterVolume() {
-    $("#vol").text('0.25');
-    videoPlayer.volume = 0.25;
+function setVolumeHigh() {
+    if (parseFloat(videoPlayer.volume.toFixed(1)) <= 0.9) {
+        videoPlayer.volume += 0.1;
+    } else {
+        videoPlayer.volume = 1;
+    }
+    console.log(videoPlayer.volume);
+    volume = parseInt(videoPlayer.volume.toFixed(1) * 10);
+    $("#vol").text(parseInt(volume));
 }
 
 //---------------- 上下左右按鈕播放功能 ------------------------
