@@ -1,3 +1,5 @@
+// script_inputFiles2.js (from my PC)
+
 //------------------------- BLE 連接 ESP32_Audio ---------------------
 let deviceAudio;
 var servAudio_uuid = '6e400003-b5a3-f393-e0a9-e50e24dcca9e'.toLowerCase();
