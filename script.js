@@ -326,24 +326,8 @@ presentationRequest.addEventListener('connectionavailable', function (event) {
 });
 
 function sendMessage(str) {
-    let message;
-
-    // 先判斷聲音的方向
-    const substrings = ['U', 'L', 'D', 'R'];
-    for (const substring of substrings) {
-        if (str.includes('F_' + substring)) {
-            message = 'F_' + substring;
-            break; // 找到後跳出迴圈
-        }
-    }
-    // 再判斷聲音方向的第幾個影檔
-    for (let i = 1; i <= 5; i++) {
-        const searchString = message + i;
-        if (str.includes(searchString)) {
-            message = searchString;
-            break; // 找到後跳出迴圈
-        }
-    }
+    let parts = str.split("video/");
+    let message = parts.length > 1 ? parts[1] : "";
     presentationConnection.send(JSON.stringify({ message }));
     console.log('> 傳送給投影頁的字串：' + message);
 
