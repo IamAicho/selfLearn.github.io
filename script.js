@@ -8,21 +8,12 @@ let characteristicAudio;
 let valueStr;  // 傳給ESP32_Audio的字串指令
 
 $(function () {
-    $("#scanAudio").on('click', async function () {
-        if (deviceAudio && deviceAudio.gatt.connected) {
+    $("#scanAudio").change(async function () {
+        if (deviceAudio && deviceAudio.gatt.connected && !$(this).is(':checked')) {
             await deviceAudio.gatt.disconnect();
             characteristicAudio = null;
-            $("#content").text('藍芽裝置已斷開連接！需重新連接');
-            $('#scanAudio').css('color', 'red');
-            $('#scanAudio').css('background', '#fff');
-            $('#scanAudio').on('mouseenter', function () {
-                $(this).css('color', '#fff');
-                $(this).css('background', '#02457a');
-            });
-            $('#scanAudio').on('mouseleave', function () {
-                $(this).css('color', 'red');
-                $(this).css('background', '#fff');
-            });
+            $("#ble_status").text('藍芽已斷開！需重新連接');
+            $('#scanAudio').prop('checked', false);
             console.log('> 已斷開 ESP32_Audio 連接。');
         } else {
             console.log('尋找 ESP32_BLE_Audio...')
@@ -32,52 +23,34 @@ $(function () {
                     optionalServices: [servAudio_uuid]
                 });
                 console.log('連接 ESP32_BLE_Audio 中...');
-                $("#content").text('藍芽裝置連接中...');
+                $("#ble_status").text('藍芽裝置連接中...');
 
                 const server = await deviceAudio.gatt.connect();
                 const service = await server.getPrimaryService(servAudio_uuid);
                 characteristicAudio = await service.getCharacteristic(charAudio_uuid);
-                $('#scanAudio').css('color', '#fff');
-                $('#scanAudio').css('background', '#02457a');
-                $('#scanAudio').on('mouseleave', function () {
-                    $(this).css('color', '#fff');
-                    $(this).css('background', '#02457a');
-                });
-                $("#content").text('藍芽裝置已連接！');
+                $("#ble_status").text('藍芽裝置已連接！');
                 console.log('> 已連接到 ESP32_Audio 。');
             } catch (error) {
-                // $("#content").text('藍芽裝置尚未連接！');
-                console.error('連接 ESP32_Audio 失敗!!', error);
+                $('#scanAudio').prop('checked', false);
+                if (error.message.includes('cancelled')) {
+                    $("#ble_status").text('已取消藍芽連接');
+                    console.error('連接 ESP32_Audio 失敗！', error);
+                } else {
+                    console.error('連接 ESP32_Audio 失敗！', error);
+                }
             }
         }
 
     });
 
-    // 斷開連接按鈕
-    // $("#disconnectAudio").on('click', async function () {
-    //     if (deviceAudio && deviceAudio.gatt.connected) {
-    //         await deviceAudio.gatt.disconnect();
-    //         characteristicAudio = null;
-    //         $("#content").text('藍芽裝置已斷開連接！需重新連接');
-    //         $('#scanAudio').css('color', 'red');
-    //         $('#scanAudio').css('background', '#fff');
-    //         $('#scanAudio').on('mouseenter', function () {
-    //             $(this).css('color', '#fff');
-    //             $(this).css('background', '#02457a');
-    //         });
-    //         $('#scanAudio').on('mouseleave', function () {
-    //             $(this).css('color', 'red');
-    //             $(this).css('background', '#fff');
-    //         });
-    //         console.log('> 已斷開 ESP32_Audio 連接。');
-    //     }
-    // });
-
 });
 
 // 定義收到上下左右訊息的函式(傳指令給 ESP32_Audio)
 async function downSpeaker() {
-    if (!characteristicAudio) return;
+    if (!characteristicAudio) {
+        $('#scanAudio').prop('checked', false);
+        return;
+    }
     valueStr = 'DOWN';
     console.log('> 傳送給ESP32_Audio: ' + valueStr);
     await characteristicAudio.writeValue(new TextEncoder().encode(valueStr));
@@ -102,12 +75,9 @@ async function upSpeaker() {
 }
 
 //---------------------- 隨機播放函式功能 -------------------------
-var videos = [
-    'video/D1.mp4', 'video/L1.mp4', 'video/R1.mp4', 'video/U1.mp4',
-    // 'video/D2.mp4', 'video/L2.mp4', 'video/R2.mp4', 'video/U2.mp4',
-    // 'video/D3.mp4', 'video/L3.mp4', 'video/R3.mp4', 'video/U3.mp4',
-    'video/D4.mp4', 'video/L4.mp4', 'video/R4.mp4', 'video/U4.mp4',
-    'video/D5.mp4', 'video/L5.mp4', 'video/R5.mp4', 'video/U5.mp4'
+let videos = [
+    "video/highF_D1.mp4", "video/highF_L1.mp4", "video/highF_U1.mp4", 
+    "video/lowF_D1.mp4", "video/lowF_L2.mp4", "video/lowF_R2.mp4",
 ];
 
 // 隨機排序陣列的函式
@@ -128,25 +98,34 @@ function shuffleArray(array) {
 
 let currentVideoIndex = 0; // 記錄當前播放的影片索引
 let currentVideoName = ''; // 記錄當前播放的聲音方向
+let currentVideoFrequency = ''; // 記錄當前播放的聲音頻率
+
 
 let shuffledVideos = shuffleArray(videos.slice());
+
 // 每個方向隨機各播放一遍
 function playRandomVideo() {
     // 將播放器的影片路徑設定為隨機排序後的路徑
     videoPlayer.src = shuffledVideos[currentVideoIndex];
     let videoName = videoPlayer.src;
     if (currentVideoIndex < shuffledVideos.length) {
+        // 判斷該播放的聲音頻率
+        if (videoName.includes('high')) {
+            currentVideoFrequency = '高頻';
+        } else if (videoName.includes('low')) {
+            currentVideoFrequency = '低頻';
+        }
         // 判斷該播放的聲音方向
-        if (videoName.includes('video/D')) {
+        if (videoName.includes('F_D')) {
             downSpeaker();
             currentVideoName = '下方';
-        } else if (videoName.includes('video/L')) {
+        } else if (videoName.includes('F_L')) {
             leftSpeaker();
             currentVideoName = '左方';
-        } else if (videoName.includes('video/R')) {
+        } else if (videoName.includes('F_R')) {
             rightSpeaker();
             currentVideoName = '右方';
-        } else if (videoName.includes('video/U')) {
+        } else if (videoName.includes('F_U')) {
             upSpeaker();
             currentVideoName = '上方';
         }
@@ -155,9 +134,34 @@ function playRandomVideo() {
         }
         videoPlayer.load();
         videoPlayer.play();
+
         currentVideoIndex++;
         console.log(currentVideoIndex + ', ' + String(videoName));
-        log(currentVideoIndex + ', ' + currentVideoName + ', ' + $('#vol').text());
+        console.log(currentVideoName + ', vol_' + $('#vol').text());
+        // 創建新的表格行元素
+        let newRow = $('<tr>');
+        newRow.append(`<td>${currentVideoIndex}</td>`);
+        newRow.append(`<td>${currentVideoFrequency}</td>`);
+        newRow.append(`<td>${currentVideoName}</td>`);
+        newRow.append(`<td>${$('#vol').text()}</td>`);
+        newRow.append(`<td>
+                        <input type="radio" id="noReact${currentVideoIndex}" name="reaction${currentVideoIndex}" value="noReact" checked>
+                        <label for="noReact${currentVideoIndex}">無反應</label><br>
+                        <input type="radio" id="wrongReact${currentVideoIndex}" name="reaction${currentVideoIndex}" value="wrongReact">
+                        <label for="wrongReact${currentVideoIndex}">找錯方向</label>
+                        <input type="radio" id="rightReact${currentVideoIndex}" name="reaction${currentVideoIndex}" value="rightReact">
+                        <label for="rightReact${currentVideoIndex}">找對方向</label>
+                    </td>`);
+        newRow.append(`<td><a href='javascript:;'>刪除</a></td>`);
+        // 為新行中的刪除按鈕設置點擊事件處理程序
+        newRow.find('a').click(function () {
+            // 在點擊時，刪除最近的祖先表格行
+            $(this).closest('tr').remove();
+        });
+        // 在表格主體的頂部添加新行
+        // $('tbody').prepend(newRow);
+        // 在表格主體的底部添加新行
+        $('tbody').append(newRow);
 
         let loopVideos = document.getElementById("videoPlayer");
         // 影片播放結束事件
@@ -170,8 +174,8 @@ function playRandomVideo() {
         videoPlayer.src = '';
         currentVideoIndex = 0;
         currentVideoName = '';
+        currentVideoFrequency = '';
         console.log('> 結束隨機播放');
-        log('> 結束隨機播放');
         shuffledVideos = shuffleArray(videos.slice())
     }
 };
@@ -194,35 +198,20 @@ $("#pauseVideo").on('click', function () {
             presentationConnection.send(JSON.stringify({ "message": "pauseVideo" }));
             console.log('> 傳送給投影頁的字串：pauseVideo');
         };
-        console.log('視頻原本正在播放');
+        console.log('影片原本正在播放');
         videoPlayer.pause();
         videoPlayer.src = '';
-        currentVideoIndex = 0;
+        // currentVideoIndex = 0;
         currentVideoName = '';
+        currentVideoFrequency = '';
         console.log('> 停止播放');
-        log('> 停止播放');
         shuffledVideos = shuffleArray(videos.slice())
+        shuffledVideoFiles = shuffleArray(videoFiles.slice())
     } else {
-        console.log('視頻原本就已暫停或停止');
+        console.log('影片原本就已暫停或停止');
     }
 });
 
-// function setFullVolume() {
-//     $("#vol").text(videoPlayer.volume*10);
-//     videoPlayer.volume = 1.0;
-// }
-// function setQuartersVolume() {
-//     $("#vol").text(videoPlayer.volume*10);
-//     videoPlayer.volume = 0.75;
-// }
-// function setHalfVolume() {
-//     $("#vol").text(videoPlayer.volume*10);
-//     videoPlayer.volume = 0.5;
-// }
-// function setQuarterVolume() {
-//     $("#vol").text(videoPlayer.volume*10);
-//     videoPlayer.volume = 0.25;
-// }
 videoPlayer.volume = 0.5;
 $("#vol").text(parseInt(videoPlayer.volume * 10));
 console.log(videoPlayer.volume);
@@ -247,94 +236,6 @@ function setVolumeHigh() {
     volume = parseInt(videoPlayer.volume.toFixed(1) * 10);
     $("#vol").text(parseInt(volume));
 }
-
-//---------------- 上下左右按鈕播放功能 ------------------------
-// let n = 0;
-// $("#upSpeaker").on('click', function () {
-//     upSpeaker();
-//     if (videos.length == 0) {
-//         $('#status').css('color', 'red');
-//     } else if (videos[3].includes('U_500')) {
-//         n++;
-//         // log(n + ', UP, 500Hz, ' + videoPlayer.volume);
-//         log(n + ', 上方, 500Hz, ' + videoPlayer.volume);
-//         playOneVideo(3);
-//     } else if (videos[3].includes('U_2000')) {
-//         n++;
-//         // log(n + ', UP, 2000Hz, ' + videoPlayer.volume);
-//         log(n + ', 上方, 2000Hz, ' + videoPlayer.volume);
-//         playOneVideo(3);
-//     }
-// });
-// $("#leftSpeaker").on('click', function () {
-//     leftSpeaker();
-//     if (videos.length == 0) {
-//         $('#status').css('color', 'red');
-//     } else if (videos[1].includes('L_500')) {
-//         n++;
-//         // log(n + ', LEFT, 500Hz, ' + videoPlayer.volume);
-//         log(n + ', 左方, 500Hz, ' + videoPlayer.volume);
-//         playOneVideo(1);
-//     } else if (videos[1].includes('L_2000')) {
-//         n++;
-//         // log(n + ', LEFT, 2000Hz, ' + videoPlayer.volume);
-//         log(n + ', 左方, 2000Hz, ' + videoPlayer.volume);
-//         playOneVideo(1);
-//     }
-// });
-// $("#downSpeaker").on('click', function () {
-//     downSpeaker();
-//     if (videos.length == 0) {
-//         $('#status').css('color', 'red');
-//     } else if (videos[0].includes('D_500')) {
-//         n++;
-//         // log(n + ', DOWN, 500Hz, ' + videoPlayer.volume);
-//         log(n + ', 下方, 500Hz, ' + videoPlayer.volume);
-//         playOneVideo(0);
-//     } else if (videos[0].includes('D_2000')) {
-//         n++;
-//         // log(n + ', DOWN, 2000Hz, ' + videoPlayer.volume);
-//         log(n + ', 下方, 2000Hz, ' + videoPlayer.volume);
-//         playOneVideo(0);
-//     }
-// });
-// $("#rightSpeaker").on('click', function () {
-//     rightSpeaker();
-//     if (videos.length == 0) {
-//         $('#status').css('color', 'red');
-//     } else if (videos[2].includes('R_500')) {
-//         n++;
-//         // log(n + ', RIGHT, 500Hz');
-//         log(n + ', 右方, 500Hz');
-//         playOneVideo(2);
-//     } else if (videos[2].includes('R_2000')) {
-//         n++;
-//         // log(n + ', RIGHT, 2000Hz');
-//         log(n + ', 右方, 2000Hz');
-//         playOneVideo(2);
-//     }
-// });
-// function playOneVideo(num) {
-//     videoPlayer.src = videos[num];
-//     videoPlayer.load();
-//     videoPlayer.play();
-//     function onendedVideo(str) {
-//         let oneVideo = document.getElementById("videoPlayer");
-//         oneVideo.onended = function () {
-//             if (str.includes("U")) {
-//                 console.log('上方播放結束');
-//             } else if (str.includes("L")) {
-//                 console.log('左方播放結束');
-//             } else if (str.includes("D")) {
-//                 console.log('下方播放結束');
-//             } else if (str.includes("R")) {
-//                 console.log('右方播放結束');
-//             }
-
-//         };
-//     }
-//     onendedVideo(videos[num]);
-// }
 
 
 
@@ -368,38 +269,39 @@ $(function () {
 })
 
 let isProjecting = false; // 追蹤投影狀態
-$("#projecOpen").on('click', function () {
-    $("#status").text('開啟投影中...');
-    console.log('開啟投影中...');
-    presentationRequest.start()
-        .then(connection => {
-            isProjecting = true;
-            // $("#status").text('> 已開啟投影, 已連接到:' + connection.url + ', ID: ' + connection.id);
-            console.log('> 已開啟投影, 已連接到:' + connection.url + ', ID: ' + connection.id)
-            $("#status").text('> 已開啟投影');
-        })
-        .catch(error => {
-            isProjecting = false;
-            console.error('開啟失敗！' + error.message);
-            if (error.message.includes("No screens")) {
-                $("#status").text('> 投影失敗，目前設備沒有可支援裝置');
-            } else if (error.message.includes("Dialog closed")) {
-                $("#status").text('> 投影失敗，未選取裝置，請再試一次');
-            } else {
-                $("#status").text('> 投影失敗');
-            }
-        });
-});
-
-$("#projecClose").on('click', function () {
-    if (presentationConnection && isProjecting) {
-        presentationConnection.terminate();
-        $("#displayState_Presentate").text('關閉投影畫面中...');
-        console.log('關閉投影畫面中...');
-        // 更新投影狀態為關閉
-        isProjecting = false;
+$("#projecOpen").change(function () {
+    if (isProjecting == false && $(this).is(':checked')) {
+        $("#projector_status").text('開啟投影中...');
+        console.log('開啟投影中...');
+        presentationRequest.start()
+            .then(connection => {
+                isProjecting = true;
+                console.log('> 已開啟投影, 已連接到:' + connection.url + ', ID: ' + connection.id)
+                $("#projector_status").text('已開啟投影');
+            })
+            .catch(error => {
+                isProjecting = false;
+                $('#projecOpen').prop('checked', false);
+                console.error('開啟失敗！' + error.message);
+                if (error.message.includes("No screens")) {
+                    $("#projector_status").text('目前設備沒有可支援裝置');
+                } else if (error.message.includes("Dialog closed")) {
+                    $("#projector_status").text('未選取裝置');
+                } else {
+                    $("#projector_status").text('投影失敗');
+                }
+            });
     } else {
-        console.log('投影並未開啟。');
+        // console.log('投影已開啟。');
+        if (presentationConnection && isProjecting) {
+            presentationConnection.terminate();
+            $("#projector_status").text('關閉投影畫面中...');
+            console.log('關閉投影畫面中...');
+            // 更新投影狀態為關閉
+            isProjecting = false;
+        } else {
+            console.log('投影並未開啟。');
+        }
     }
 });
 
@@ -412,7 +314,7 @@ presentationRequest.addEventListener('connectionavailable', function (event) {
 
     // 監聽投影連接的 "terminate" 事件，當關閉投影時觸發。
     presentationConnection.addEventListener('terminate', function () {
-        $("#status").text('> 已關閉投影');
+        $("#projector_status").text('已關閉投影');
         console.log('> 已關閉投影畫面。');
     });
 
@@ -429,8 +331,8 @@ function sendMessage(str) {
     // 先判斷聲音的方向
     const substrings = ['U', 'L', 'D', 'R'];
     for (const substring of substrings) {
-        if (str.includes('video/' + substring)) {
-            message = 'video/' + substring;
+        if (str.includes('F_' + substring)) {
+            message = 'F_' + substring;
             break; // 找到後跳出迴圈
         }
     }
@@ -453,20 +355,214 @@ function sendMessage(str) {
 $("#cleanLog").on('click', function () {
     console.log('清除播放紀錄的 LOG');
     chromeSamples.clearLog();
-    n = 0;
+    $('#log').prepend(`
+        <thead>
+            <tr>
+                <th>順序</th>
+                <th>頻率</th>
+                <th>方向</th>
+                <th>音量</th>
+                <th>評估</th>
+            </tr>
+        </thead>
+        <tbody></tbody>`);
+
+    currentVideoIndex = 0;
 });
 
+function exportToExcel() {
+    // 創建一個新的 Excel 工作簿
+    let wb = XLSX.utils.book_new();
+
+    // 收集表格資料
+    let data = [];
+    $('table thead').each(function (rowIndex, row) {
+        let rowData = [];
+        $(row).find('th').each(function (colIndex, col) {
+            rowData.push($(col).text());
+        });
+        data.push(rowData);
+    });
+    $('table tbody tr').each(function (rowIndex, row) {
+        let rowData = [];
+        $(row).find('td').each(function (colIndex, col) {
+            if (colIndex == 4) {
+                console.log($(col).find('input:checked').val());
+                rowData.push($(col).find('input:checked').val());
+            } else {
+                rowData.push($(col).text());
+            }
+        });
+        // 使用 splice 删除第六個元素（索引為 5）
+        rowData.splice(5, 1);
+        data.push(rowData);
+    });
+    console.log(data);
+
+    // 將表格資料轉換為 SheetJS 中的工作表格式
+    let ws = XLSX.utils.aoa_to_sheet(data);
+
+    // 將工作表添加到工作簿
+    XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+
+    // 將工作簿轉換為二進制格式
+    let wbout = XLSX.write(wb, { bookType: 'xlsx', type: 'binary' });
+    let blob = new Blob([s2ab(wbout)], { type: 'application/octet-stream' });
+    let fileName = $("#fileName").val();
+    console.log(`檔名: Evaluation_${fileName}.xlsx`);
+    if (fileName.length == 0) {
+        alert("請輸入要儲存的檔名");
+    } else {
+        // 使用 FileSaver.js 儲存 Blob 為檔案
+        saveAs(blob, `Evaluation_${fileName}.xlsx`);
+    }
+
+};
+// 將字串轉換為 ArrayBuffer
+function s2ab(s) {
+    let buf = new ArrayBuffer(s.length);
+    let view = new Uint8Array(buf);
+    for (let i = 0; i != s.length; ++i) view[i] = s.charCodeAt(i) & 0xFF;
+    return buf;
+}
 $("#saveLog").on('click', function () {
-    // 獲取<pre id="log">元素中的文本內容
-    const logContent = document.getElementById('log').innerText;
-    // 創建一個 Blob 對象，將文本內容轉換為 Blob
-    const blob = new Blob([logContent], { type: 'text/plain' });
-    // 創建下載連結
-    const downloadLink = document.createElement('a');
-    downloadLink.href = URL.createObjectURL(blob);
-    // 設置下載文件名稱
-    let fileName = '(自定義檔案名稱)';
-    downloadLink.download = fileName + '.txt';
-    // 將下載連結點擊，觸發下載
-    downloadLink.click();
+    exportToExcel();
+});
+
+
+
+
+
+//-------------------------- 上傳學習影檔 ------------------------------
+let videoFiles = [];
+let shuffledVideoFiles;
+$(function () {
+    $("#videoInput").on("change", function (event) {
+        let files = event.target.files;
+        videoFiles = [];
+        if (files.length > 0) {
+            $("#videoInputedContent").empty();
+            for (let i = 0; i < files.length; i++) {
+                console.log("檔案名稱: " + files[i].name);
+                if (files[i].name.includes('high')) {
+                    videoFiles.push("video/highF/" + files[i].name);
+                } else if (files[i].name.includes('low')) {
+                    videoFiles.push("video/lowF/" + files[i].name);
+                }
+                $("#videoInputedContent").append(files[i].name + ", ")
+            }
+            console.log(videoFiles);
+            // $("#videoInputedContent").text(videoFiles);
+            shuffledVideoFiles = shuffleArray(videoFiles.slice())
+        } else {
+            $("#videoInputedContent").text("目前為預設的學習影檔！");
+        }
+    });
+});
+
+function playRandomVideoFiles() {
+    // 將播放器的影片路徑設定為隨機排序後的路徑
+    videoPlayer.src = shuffledVideoFiles[currentVideoIndex];
+    let videoName = videoPlayer.src;
+    if (currentVideoIndex < shuffledVideoFiles.length) {
+        // 判斷該播放的聲音頻率
+        if (videoName.includes('high')) {
+            currentVideoFrequency = '高頻';
+        } else if (videoName.includes('low')) {
+            currentVideoFrequency = '低頻';
+        }
+        // 判斷該播放的聲音方向
+        if (videoName.includes('F_D')) {
+            downSpeaker();
+            currentVideoName = '下方';
+        } else if (videoName.includes('F_L')) {
+            leftSpeaker();
+            currentVideoName = '左方';
+        } else if (videoName.includes('F_R')) {
+            rightSpeaker();
+            currentVideoName = '右方';
+        } else if (videoName.includes('F_U')) {
+            upSpeaker();
+            currentVideoName = '上方';
+        }
+        if (isProjecting == true) {
+            sendMessage(videoName);
+        }
+        videoPlayer.load();
+        videoPlayer.play();
+
+        currentVideoIndex++;
+        console.log(currentVideoIndex + ', ' + String(videoName));
+        console.log(currentVideoName + ', vol_' + $('#vol').text());
+        // 創建新的表格行元素
+        let newRow = $('<tr>');
+        newRow.append(`<td>${currentVideoIndex}</td>`);
+        newRow.append(`<td>${currentVideoFrequency}</td>`);
+        newRow.append(`<td>${currentVideoName}</td>`);
+        newRow.append(`<td>${$('#vol').text()}</td>`);
+        newRow.append(`<td>
+                        <input type="radio" id="noReact${currentVideoIndex}" name="reaction${currentVideoIndex}" value="noReact" checked>
+                        <label for="noReact${currentVideoIndex}">無反應</label><br>
+                        <input type="radio" id="wrongReact${currentVideoIndex}" name="reaction${currentVideoIndex}" value="wrongReact">
+                        <label for="wrongReact${currentVideoIndex}">找錯方向</label>
+                        <input type="radio" id="rightReact${currentVideoIndex}" name="reaction${currentVideoIndex}" value="rightReact">
+                        <label for="rightReact${currentVideoIndex}">找對方向</label>
+                    </td>`);
+        newRow.append(`<td><a href='javascript:;'>刪除</a></td>`);
+        // 為新行中的刪除按鈕設置點擊事件處理程序
+        newRow.find('a').click(function () {
+            // 在點擊時，刪除最近的祖先表格行
+            $(this).closest('tr').remove();
+        });
+        // 在表格主體的頂部添加新行
+        // $('tbody').prepend(newRow);
+        // 在表格主體的底部添加新行
+        $('tbody').append(newRow);
+
+        let loopVideos = document.getElementById("videoPlayer");
+        // 影片播放結束事件
+        loopVideos.onended = function () {
+            // alert("The video has ended");
+            playRandomVideoFiles();
+        };
+    } else {
+        // 所有影檔播放完畢，將索引歸零並重新整理播放順序
+        videoPlayer.src = '';
+        currentVideoIndex = 0;
+        currentVideoName = '';
+        currentVideoFrequency = '';
+        console.log('> 結束隨機播放');
+        shuffledVideoFiles = shuffleArray(videoFiles.slice())
+    }
+};
+
+$("#playRandomVideo_files").on('click', function () {
+    console.log(currentVideoIndex);
+    if (videoPlayer.paused) {
+        console.log(videoFiles.length);
+        if (videoFiles.length != 0) {
+            if (isProjecting == true) {
+                // 傳字串指令到投影頁面
+                presentationConnection.send(JSON.stringify({ "message": "playRandomVideo" }));
+                console.log('> 傳送給投影頁的字串：playRandomVideo');
+                playRandomVideoFiles();
+
+            } else {
+                playRandomVideoFiles();
+            }
+        } else {
+            // alert("尚未上傳學習影檔！");
+            if (isProjecting == true) {
+                // 傳字串指令到投影頁面
+                presentationConnection.send(JSON.stringify({ "message": "playRandomVideo" }));
+                console.log('> 傳送給投影頁的字串：playRandomVideo');
+                playRandomVideo();
+
+            } else {
+                playRandomVideo();
+            }
+        }
+    } else {
+        console.log("影片正在播放");
+    }
 });
