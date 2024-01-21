@@ -53,23 +53,11 @@
                 connection.send(receivedMessage.message);
 
                 let str = receivedMessage.message;
-                if (str.includes('video/')) {
+                if (str.includes('.mp4')) {
                     let videoName;
-                    const substrings = ['U', 'L', 'D', 'R'];
-                    for (const substring of substrings) {
-                        if (str.includes('video/' + substring)) {
-                            videoName = 'video/' + substring;
-                            break; // 找到後跳出迴圈
-                        }
-                    }
-                    for (let i = 1; i <= 5; i++) {
-                        const searchString = videoName + i;
-                        if (str.includes(searchString)) {
-                            videoName = searchString + '.mp4';
-                            videoPlayer.src = videoName;
-                            break; // 找到後跳出迴圈
-                        }
-                    }
+                    videoName = 'video/' + str;
+                    videoPlayer.src = videoName;
+                    connection.send(videoName);
                     videoPlayer.load();
                     videoPlayer.play();
                 } else if (str.includes('pauseVideo')) {
