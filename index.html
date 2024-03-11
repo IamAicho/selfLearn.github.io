@@ -1,12 +1,13 @@
 <!-- index_InputFiles2.html (from my PC) -->
 <!DOCTYPE html>
-<html lang="TW">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- <title>Experimental web interface</title> -->
     <title>展示用網頁</title>
+
     <!-- w3 的樣式 -->
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
     <!-- icon 圖的 CDN -->
@@ -20,7 +21,7 @@
     <!-- 防止 error : GET http://127.0.0.1:5502/favicon.ico 404 (Not Found) 
         FROM: favicon.ico:1 -->
     <link rel="icon" href="data:,">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style2.css">
 </head>
 
 <body>
@@ -62,7 +63,12 @@
 
                 <div class="button_random w3-xxlarge">
                     <div class="button w3-padding" id="playRandomVideo_files">隨機播放</div>
-                    <div class="button w3-padding" id="pauseVideo">停止</div>
+                    <div class="button w3-padding" id="pauseVideo">結束</div>
+
+                    <div id="videoIconContainer">
+                        <i class="fa-solid fa-play"></i>
+                    </div>
+
                 </div>
             </div>
 
@@ -76,13 +82,17 @@
             </div>
 
             <div class="contentVid">
-                <div class="w3-padding w3-xxxlarge">
+                <div class="w3-padding w3-xxxlarge" style="display: flex;">
                     <div class="volControl" onclick="setVolumeLow()">
-                        <i class="fa-solid fa-circle-minus"></i>
+                        <!-- <i class="fa-solid fa-volume-low"></i> -->
+                        <i class="fa-solid fa-volume-off"></i>
+                        <i class="fa-solid fa-arrow-down-long w3-xlarge"></i>
                     </div>
-                    <span id="vol"></span>
+                    <span class="w3-padding" id="vol"></span>
                     <div class="volControl" onclick="setVolumeHigh()">
-                        <i class="fa-solid fa-circle-plus"></i>
+                        <!-- <i class="fa-solid fa-volume-high"></i> -->
+                        <i class="fa-solid fa-volume-off"></i>
+                        <i class="fa-solid fa-arrow-up-long w3-xlarge"></i>
                     </div>
                 </div>
 
@@ -98,8 +108,9 @@
                 <label for="videoInput" class="p_status">上傳學習影檔：</label>
                 <input type="file" accept="video/*" style="font-size: medium;" name="videoInput" id="videoInput"
                     multiple="true">
-                <div class="output" style="height: 65px;" id="videoInputedContent">目前為預設的學習影檔！
-                    <br>上傳的影音檔需要符合特定格式
+                <div class="output" style="height: 65px;" id="videoInputedContent">
+                    (上傳的影音檔需要符合特定格式)
+                    <br>目前為預設的學習影檔！總共有<span id="videoInputedAmount"></span>個檔案
                 </div>
             </div>
 
@@ -142,7 +153,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
 
     <script src="logScript.js"></script>
-    <script src="script.js"></script>
+    <script src="script_inputFiles2.js"></script>
 </body>
 
 </html>
