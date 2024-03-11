@@ -16,7 +16,7 @@ $(function () {
             $('#scanAudio').prop('checked', false);
             console.log('> 已斷開 ESP32_Audio 連接。');
         } else {
-            console.log('尋找 ESP32_BLE_Audio...')
+            console.log('尋找 ESP32_BLE_Audio...');
             try {
                 deviceAudio = await navigator.bluetooth.requestDevice({
                     filters: [{ namePrefix: 'ESP32_BLE_Audio' }],
@@ -47,38 +47,56 @@ $(function () {
 
 // 定義收到上下左右訊息的函式(傳指令給 ESP32_Audio)
 async function downSpeaker() {
-    if (!characteristicAudio) {
+    if (!deviceAudio || !characteristicAudio || !deviceAudio.gatt.connected) {
         $('#scanAudio').prop('checked', false);
         return;
+    } else {
+        valueStr = 'DOWN';
+        console.log('> 傳送給ESP32_Audio: ' + valueStr);
     }
-    valueStr = 'DOWN';
-    console.log('> 傳送給ESP32_Audio: ' + valueStr);
+
     await characteristicAudio.writeValue(new TextEncoder().encode(valueStr));
 }
 async function leftSpeaker() {
-    if (!characteristicAudio) return;
-    valueStr = 'LEFT';
-    console.log('> 傳送給ESP32_Audio: ' + valueStr);
+    if (!deviceAudio || !characteristicAudio || !deviceAudio.gatt.connected) {
+        $('#scanAudio').prop('checked', false);
+        return;
+    } else {
+        valueStr = 'LEFT';
+        console.log('> 傳送給ESP32_Audio: ' + valueStr);
+    }
+
     await characteristicAudio.writeValue(new TextEncoder().encode(valueStr));
 }
 async function rightSpeaker() {
-    if (!characteristicAudio) return;
-    valueStr = 'RIGHT';
-    console.log('> 傳送給ESP32_Audio: ' + valueStr);
+    if (!deviceAudio || !characteristicAudio || !deviceAudio.gatt.connected) {
+        $('#scanAudio').prop('checked', false);
+        return;
+    } else {
+        valueStr = 'RIGHT';
+        console.log('> 傳送給ESP32_Audio: ' + valueStr);
+    }
+
     await characteristicAudio.writeValue(new TextEncoder().encode(valueStr));
 }
 async function upSpeaker() {
-    if (!characteristicAudio) return;
-    valueStr = 'UP';
-    console.log('> 傳送給ESP32_Audio: ' + valueStr);
+    if (!deviceAudio || !characteristicAudio || !deviceAudio.gatt.connected) {
+        $('#scanAudio').prop('checked', false);
+        return;
+    } else {
+        valueStr = 'UP';
+        console.log('> 傳送給ESP32_Audio: ' + valueStr);
+    }
+
     await characteristicAudio.writeValue(new TextEncoder().encode(valueStr));
 }
 
 //---------------------- 隨機播放函式功能 -------------------------
 let videos = [
-    "video/highF_D1.mp4", "video/highF_L1.mp4", "video/highF_U1.mp4", 
+    "video/highF_D1.mp4", "video/highF_L1.mp4", "video/highF_U1.mp4",
     "video/lowF_D1.mp4", "video/lowF_L2.mp4", "video/lowF_R2.mp4",
 ];
+$("#videoInputedAmount").text(videos.length);
 
 // 隨機排序陣列的函式
 function shuffleArray(array) {
@@ -135,7 +153,10 @@ function playRandomVideo() {
         videoPlayer.load();
         videoPlayer.play();
 
-        currentVideoIndex++;
+        // 使用 jQuery 選取 tbody 中的所有 tr 元素
+        let numberOfTrs = $('#log tbody tr').length;
+        console.log(numberOfTrs);
+        currentVideoIndex = numberOfTrs + 1;
         console.log(currentVideoIndex + ', ' + String(videoName));
         console.log(currentVideoName + ', vol_' + $('#vol').text());
         // 創建新的表格行元素
@@ -204,11 +225,23 @@ $("#pauseVideo").on('click', function () {
         // currentVideoIndex = 0;
         currentVideoName = '';
         currentVideoFrequency = '';
-        console.log('> 停止播放');
+        console.log('> 結束播放');
         shuffledVideos = shuffleArray(videos.slice())
         shuffledVideoFiles = shuffleArray(videoFiles.slice())
+
+        // 獲取 iconContainer 元素
+        var iconContainer = $('#videoIconContainer');
+        // 檢查當前圖標是否是暫停圖標
+        if (iconContainer.find('i').hasClass('fa-pause')) {
+            // 如果是播放圖標，則切換為播放圖標
+            iconContainer.html('<i class="fa-solid fa-play"></i>');
+        } else {
+            // 如果是暫停圖標，則切換為暫停圖標
+            iconContainer.html('<i class="fa-solid fa-pause"></i>');
+        }
+
     } else {
-        console.log('影片原本就已暫停或停止');
+        console.log('影片原本就已暫停或結束');
     }
 });
 
@@ -422,6 +455,20 @@ let videoFiles = [];
 let shuffledVideoFiles;
 $(function () {
     $("#videoInput").on("change", function (event) {
+        chromeSamples.clearLog();
+        $('#log').prepend(`
+        <thead>
+            <tr>
+                <th>順序</th>
+                <th>頻率</th>
+                <th>方向</th>
+                <th>音量</th>
+                <th>評估</th>
+            </tr>
+        </thead>
+        <tbody></tbody>`);
+        currentVideoIndex = 0;
+
         let files = event.target.files;
         videoFiles = [];
         if (files.length > 0) {
@@ -440,6 +487,7 @@ $(function () {
             shuffledVideoFiles = shuffleArray(videoFiles.slice())
         } else {
             $("#videoInputedContent").text("目前為預設的學習影檔！");
+            $("#videoInputedContent").append("總共有" + videos.length + "個檔案");
         }
     });
 });
@@ -475,7 +523,10 @@ function playRandomVideoFiles() {
         videoPlayer.load();
         videoPlayer.play();
 
-        currentVideoIndex++;
+        // 使用 jQuery 選取 tbody 中的所有 tr 元素
+        let numberOfTrs = $('#log tbody tr').length;
+        console.log(numberOfTrs);
+        currentVideoIndex = numberOfTrs + 1;
         console.log(currentVideoIndex + ', ' + String(videoName));
         console.log(currentVideoName + ', vol_' + $('#vol').text());
         // 創建新的表格行元素
@@ -517,11 +568,21 @@ function playRandomVideoFiles() {
         currentVideoFrequency = '';
         console.log('> 結束隨機播放');
         shuffledVideoFiles = shuffleArray(videoFiles.slice())
+
+        // 獲取 iconContainer 元素
+        var iconContainer = $('#videoIconContainer');
+        // 檢查當前圖標是否是播放圖標
+        if (iconContainer.find('i').hasClass('fa-play')) {
+            // 如果是播放圖標，則切換為暫停圖標
+            iconContainer.html('<i class="fa-solid fa-pause"></i>');
+        } else {
+            // 如果是暫停圖標，則切換為播放圖標
+            iconContainer.html('<i class="fa-solid fa-play"></i>');
+        }
     }
 };
 
 $("#playRandomVideo_files").on('click', function () {
-    console.log(currentVideoIndex);
     if (videoPlayer.paused) {
         console.log(videoFiles.length);
         if (videoFiles.length != 0) {
@@ -546,6 +607,18 @@ $("#playRandomVideo_files").on('click', function () {
                 playRandomVideo();
             }
         }
+
+        // 獲取 iconContainer 元素
+        var iconContainer = $('#videoIconContainer');
+        // 檢查當前圖標是否是播放圖標
+        if (iconContainer.find('i').hasClass('fa-play')) {
+            // 如果是播放圖標，則切換為暫停圖標
+            iconContainer.html('<i class="fa-solid fa-pause"></i>');
+        } else {
+            // 如果是暫停圖標，則切換為播放圖標
+            iconContainer.html('<i class="fa-solid fa-play"></i>');
+        }
+
     } else {
         console.log("影片正在播放");
     }
