@@ -213,37 +213,38 @@ $("#playRandomVideo").on('click', function () {
     }
 });
 
-$("#pauseVideo").on('click', function () {
-    if (!videoPlayer.paused) {
-        if (isProjecting == true) {
-            presentationConnection.send(JSON.stringify({ "message": "pauseVideo" }));
-            console.log('> 傳送給投影頁的字串：pauseVideo');
-        };
-        console.log('影片原本正在播放');
-        videoPlayer.pause();
-        videoPlayer.src = '';
-        // currentVideoIndex = 0;
-        currentVideoName = '';
-        currentVideoFrequency = '';
-        console.log('> 結束播放');
-        shuffledVideos = shuffleArray(videos.slice())
-        shuffledVideoFiles = shuffleArray(videoFiles.slice())
+// $("#pauseVideo").on('click', function () {
+//     if (!videoPlayer.paused) {
+//         if (isProjecting == true) {
+//             presentationConnection.send(JSON.stringify({ "message": "pauseVideo" }));
+//             console.log('> 傳送給投影頁的字串：pauseVideo');
+//         };
+//         console.log('影片原本正在播放');
+//         videoPlayer.pause();
+//         videoPlayer.src = '';
+//         // currentVideoIndex = 0;
+//         currentVideoName = '';
+//         currentVideoFrequency = '';
+//         console.log('> 結束播放');
+//         shuffledVideos = shuffleArray(videos.slice())
+//         shuffledVideoFiles = shuffleArray(videoFiles.slice())
 
-        // 獲取 iconContainer 元素
-        var iconContainer = $('#videoIconContainer');
-        // 檢查當前圖標是否是暫停圖標
-        if (iconContainer.find('i').hasClass('fa-pause')) {
-            // 如果是播放圖標，則切換為播放圖標
-            iconContainer.html('<i class="fa-solid fa-play"></i>');
-        } else {
-            // 如果是暫停圖標，則切換為暫停圖標
-            iconContainer.html('<i class="fa-solid fa-pause"></i>');
-        }
+//         // 獲取 iconContainer 元素
+//         var iconContainer = $('#videoIconContainer');
+//         // 檢查當前圖標是否是暫停圖標
+//         if (iconContainer.find('i').hasClass('fa-pause')) {
+//             // 如果是播放圖標，則切換為播放圖標
+//             iconContainer.html('<i class="fa-solid fa-play"></i>');
+//         } else {
+//             // 如果是暫停圖標，則切換為暫停圖標
+//             iconContainer.html('<i class="fa-solid fa-pause"></i>');
+//         }
 
-    } else {
-        console.log('影片原本就已暫停或結束');
-    }
-});
+
+//     } else {
+//         console.log('影片原本就已暫停或結束');
+//     }
+// });
 
 videoPlayer.volume = 0.5;
 $("#vol").text(parseInt(videoPlayer.volume * 10));
@@ -620,6 +621,31 @@ $("#playRandomVideo_files").on('click', function () {
         }
 
     } else {
-        console.log("影片正在播放");
+        // console.log("影片正在播放");
+
+        if (isProjecting == true) {
+            presentationConnection.send(JSON.stringify({ "message": "pauseVideo" }));
+            console.log('> 傳送給投影頁的字串：pauseVideo');
+        };
+        console.log('影片原本正在播放');
+        videoPlayer.pause();
+        videoPlayer.src = '';
+        // currentVideoIndex = 0;
+        currentVideoName = '';
+        currentVideoFrequency = '';
+        console.log('> 結束播放');
+        shuffledVideos = shuffleArray(videos.slice())
+        shuffledVideoFiles = shuffleArray(videoFiles.slice())
+
+        // 獲取 iconContainer 元素
+        var iconContainer = $('#videoIconContainer');
+        // 檢查當前圖標是否是暫停圖標
+        if (iconContainer.find('i').hasClass('fa-pause')) {
+            // 如果是播放圖標，則切換為播放圖標
+            iconContainer.html('<i class="fa-solid fa-play"></i>');
+        } else {
+            // 如果是暫停圖標，則切換為暫停圖標
+            iconContainer.html('<i class="fa-solid fa-pause"></i>');
+        }
     }
 });
