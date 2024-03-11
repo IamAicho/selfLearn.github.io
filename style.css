@@ -34,7 +34,7 @@ p {
 }
 
 .leftSide {
-    width: 40%;
+    width: 38%;
     text-align: center;
     padding: 5px;
 }
@@ -117,17 +117,6 @@ input:checked+.slider:before {
     padding-bottom: 8px;
 }
 
-.button_btDisconnect {
-    display: inline-block;
-    background: #fff;
-    border: 0.5px solid;
-    border-color: #000;
-    border-radius: 10px;
-    margin: 3px;
-    padding: 3px 5px;
-    cursor: pointer;
-}
-
 .button {
     display: inline-block;
     background: #fff;
@@ -141,6 +130,12 @@ input:checked+.slider:before {
     background-color: #3b7c78;
     color: #fff;
     border: 2px #fff solid;
+}
+
+.button_random {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center
 }
 
 .button_directions {
@@ -214,7 +209,8 @@ pre {
 } */
 
 .volControl {
-    display:inline-block;
+    display: flex;
+    align-items: center;
     color: #3b7c78;
     cursor: pointer;
 }
@@ -223,3 +219,5 @@ th, td {
     text-align: center;
     font-size: large;
 }
+
+
