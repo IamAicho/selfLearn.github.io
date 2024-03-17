@@ -1,0 +1,236 @@
+body {
+    background-color: #e5e5e5;
+    font-family: 'Noto Sans TC', sans-serif;
+}
+
+.title {
+    text-align: center;
+}
+
+h1 {
+    font-family: 'Noto Sans TC', sans-serif;
+    margin: 5px;
+}
+
+p {
+    margin: 0;
+}
+
+.content {
+    display: flex;
+    justify-content: space-around;
+    /* 通常會故意兩邊留白: 固定尺寸 */
+    padding: 20px 15px;
+    background: #c6e1b6;
+    width: 1100px;
+    height: 640px;
+    border: 4px solid;
+    border-color: #3b7c78;
+    border-radius: 30px;
+    margin: 10px auto;/* 適合用在大容器裡的居中(auto 只用在 margin 的左右, padding 沒有這樣的寫法) */
+    overflow: auto;
+    
+}
+
+.content_small {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    /* 通常會故意兩邊留白: 固定尺寸 */
+    padding: 0px 50px;
+    background: #c6e1b6;
+    width: 400px;
+    height: 280px;
+    border: 4px solid;
+    border-color: #3b7c78;
+    border-radius: 30px;
+    margin: 10px auto;/* 適合用在大容器裡的居中(auto 只用在 margin 的左右, padding 沒有這樣的寫法) */
+    overflow: auto;
+}
+
+.leftSide {
+    width: 40%;
+    text-align: center;
+    padding: 5px;
+}
+
+.rightSide {
+    width: 55%;
+    padding: 5px;
+}
+
+
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+input:checked+.slider {
+    background-color: #3b7c78;
+}
+
+input:focus+.slider {
+    box-shadow: 0 0 1px #3b7c78;
+}
+
+input:checked+.slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+    border-radius: 34px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
+}
+
+
+
+.button_btConnect {
+    display: inline-block;
+    background: #fff;
+    color: #02457a;
+    border-radius: 30px;
+    margin: 15px 5px;
+    padding-bottom: 8px;
+}
+
+.button {
+    display: inline-block;
+    background: #fff;
+    border: 2px solid;
+    border-color: #3b7c78;
+    border-radius: 10px;
+    margin: 15px 0;
+    cursor: pointer;
+}
+.button:hover {
+    background-color: #3b7c78;
+    color: #fff;
+    border: 2px #fff solid;
+}
+
+.button_random {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center
+}
+
+.button_directions {
+    display: inline-block;
+    text-align: center;
+    width: 200px;
+}
+
+.button_direction {
+    background: #fff;
+    color: #3b7c78;
+    border: 3px solid;
+    border-color: #3b7c78;
+    border-radius: 10px;
+    margin: 5px 0;
+    padding: 10px 10px;
+    cursor: pointer;
+}
+.button_direction:hover {
+    background-color: #3b7c78;
+    color: #fff;
+    border: 3px #fff solid;
+}
+
+.p_status {
+    display: inline;
+    font-size: xx-large;
+    font-weight: bold;
+    margin: 10px 0;
+}
+
+.output {
+    display: block;
+    height: 450px;
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 10px;
+    overflow: auto;
+}
+
+pre {
+    margin: 0;
+    font-family: 'Times New Roman', Times, serif;
+}
+
+.contentVid {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* 圖和字切軸置中 */
+}
+
+/* .btnVol {
+    margin: 3px;
+    padding: 3px 5px;
+} */
+
+/* .volLeft {
+    display:inline-block;
+    border-top: 25px solid transparent;
+    border-bottom: 25px solid transparent;
+    border-right: 40px solid #00DDDD;
+}
+.volRight {
+    display:inline-block;
+    border-top: 25px solid transparent;
+    border-bottom: 25px solid transparent;
+    border-left: 40px solid #00DDDD;
+} */
+
+.volControl {
+    display: flex;
+    align-items: center;
+    color: #3b7c78;
+    cursor: pointer;
+}
+
+th, td {
+    text-align: center;
+    font-size: large;
+}
+
+

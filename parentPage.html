@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <title>Experimental web interface</title> -->
+    <title>家長操作介面</title>
+
+    <!-- w3 的樣式 -->
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <!-- icon 圖的 CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- google fonts 字型套用連結 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <!-- bootstrap 的 CDN -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+
+    <!-- 防止 error : GET http://127.0.0.1:5502/favicon.ico 404 (Not Found) 
+        FROM: favicon.ico:1 -->
+    <link rel="icon" href="data:,">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="title ">
+    </div>
+    <div class="content">
+        <div class="leftSide">
+            <div style="display: flex; justify-content: center">
+                <div>
+                    <div class="button_btConnect">
+                        <div class="w3-padding w3-xlarge">
+                            <i class="fa-brands fa-bluetooth"></i>
+                            藍芽喇叭
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="scanAudio">
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="button_btConnect">
+                        <div class="w3-padding w3-xlarge">
+                            <i class="fa-solid fa-tv"></i>
+                            投影機
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="projecOpen">
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <hr style="margin: 10px; border-top: 2px dashed">
+
+            <div class="button_control">
+                <div class="button_random w3-xxxlarge">
+                    <div id="playRandomVideo_files">
+                        <div id="videoIconContainer" style="color: #3b7c78; cursor: pointer;">
+                            <i class="fa-solid fa-play"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="contentVid">
+                <div class="w3-xxlarge" style="display: flex;">
+                    <div class="volControl" onclick="setVolumeLow()">
+                        <i class="fa-solid fa-volume-off"></i>
+                        <i class="fa-solid fa-arrow-down-long w3-xlarge"></i>
+                    </div>
+                    <span class="w3-padding" id="vol"></span>
+                    <div class="volControl" onclick="setVolumeHigh()">
+                        <i class="fa-solid fa-volume-off"></i>
+                        <i class="fa-solid fa-arrow-up-long w3-xlarge"></i>
+                    </div>
+                </div>
+
+                <div class="vid">
+                    <video style="height: 200px;" id="videoPlayer" poster="image/CHFlogo4.png"></video>
+                </div>
+            </div>
+
+            <hr style="margin: 20px; border-top: 2px dashed">
+
+            <div style="display: flex; justify-content: space-around; align-items: end; font-size: medium;">
+                <a href="index.html">登出</a>
+                <p style="text-align: end;">使用者：A家長<br>個案：A兒童</p>
+            </div>
+        </div>
+
+        <div class="rightSide">
+            <br>
+            <div>
+                <p class="p_status">介面說明書：</p>
+                <div style="display: inline;" data-toggle="popover" data-html="true" title="介面使用指南" id="popoverContent">
+
+                    <i class="fa-solid fa-book-open" style="font-size: xxx-large; 
+                                                            font-weight: bold; 
+                                                            margin: 10px 20px;
+                                                            color: #3b7c78;
+                                                            cursor: pointer;"></i>
+                </div>
+            </div>
+
+            <br>
+            <div>
+                <p class="p_status">聲音播放評估紀錄：</p>
+                <div class="output" style="height: 340px;">
+                    <table border="1" style="border-collapse: collapse; width: 100%;" id="log">
+                        <thead>
+                            <tr>
+                                <th>順序</th>
+                                <th>頻率</th>
+                                <th>方向</th>
+                                <th>音量</th>
+                                <th>評估</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <div style="display: flex; justify-content: space-between">
+                    <div>
+                        <input type="text" class="" id="fileName" placeholder="請輸入檔名"
+                            style="width: 40%; margin: 15px 0; padding: 3px; font-size: 22px; border-radius: 8px;">
+                        <button class="button w3-xlarge" id="saveLog">儲存紀錄</button>
+                    </div>
+
+                    <button class="button w3-xlarge" id="cleanLog">清除紀錄</button>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+
+
+    <script src="https://kit.fontawesome.com/66d48061b3.js" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.1/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+    <script src="logScript.js"></script>
+    <script src="script.js"></script>
+    <script>
+        $(function () {
+            $('[data-toggle="popover"]').popover();
+
+            let videoInputedAmount = videos.length;
+            $('#videoInputedAmount').text(videoInputedAmount);
+            $('#popoverContent').attr('data-content', `1.目前總共會播放${videoInputedAmount}個影音檔<br> 
+                                                    2.如未連接藍芽喇叭則為雙聲道<br>
+                                                    3.按播放鍵即可開始<br>
+                                                    4.播放過程中請觀察孩子的反應!!<br>
+                                                    5.並在評估格中做紀錄`);
+
+        });
+    </script>
+</body>
+
+</html>
