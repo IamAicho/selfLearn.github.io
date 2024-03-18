@@ -70,12 +70,8 @@ function updateVolume() {
     source.mediaElement.volume = leftVolume;
     merger.disconnect();
     splitter.disconnect();
-    splitter.connect(merger, 0, 0); // 左聲道
-    splitter.connect(merger, 1, 1); // 右聲道
-    merger.channelInterpretation = "discrete";
-    merger.channelCountMode = "explicit";
-    merger.getChannelData(0).fill(leftVolume);
-    merger.getChannelData(1).fill(rightVolume);
+    splitter.connect(merger, 0, 0);
+    splitter.connect(merger, 1, 1);
     merger.connect(audioCtx.destination);
 }
 async function leftSpeaker() {
