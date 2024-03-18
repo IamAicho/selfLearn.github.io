@@ -56,7 +56,7 @@ async function downSpeaker() {
     await characteristicAudio.writeValue(new TextEncoder().encode(valueStr));
 }
 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-const source = audioCtx.createMediaElementSource($("#myVideo")[0]);
+const source = audioCtx.createMediaElementSource($("videoPlayer")[0]);
 const splitter = audioCtx.createChannelSplitter(2);
 const merger = audioCtx.createChannelMerger(2);
 source.connect(splitter);
