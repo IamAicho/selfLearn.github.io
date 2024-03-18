@@ -55,33 +55,11 @@ async function downSpeaker() {
 
     await characteristicAudio.writeValue(new TextEncoder().encode(valueStr));
 }
-const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-const source = audioCtx.createMediaElementSource($("#videoPlayer")[0]);
-const splitter = audioCtx.createChannelSplitter(2);
-const merger = audioCtx.createChannelMerger(2);
-source.connect(splitter);
-splitter.connect(merger, 0, 0); // 左聲道
-splitter.connect(merger, 1, 1); // 右聲道
-merger.connect(audioCtx.destination);
-// 初始化左右声道音量
-let leftVolume = 1;
-let rightVolume = 1;
-function updateVolume() {
-    source.mediaElement.volume = leftVolume;
-    merger.disconnect();
-    splitter.disconnect();
-    splitter.connect(merger, 0, 0);
-    splitter.connect(merger, 1, 1);
-    merger.connect(audioCtx.destination);
-}
 async function leftSpeaker() {
     if (!deviceAudio || !characteristicAudio || !deviceAudio.gatt.connected) {
         $('#scanAudio').prop('checked', false);
 
         console.log("目前尚未連接藍芽喇叭，預設用雙聲道播放左邊聲音。");
-        leftVolume = 1;
-        rightVolume = 0;
-        updateVolume();
         return;
     } else {
         valueStr = 'LEFT';
@@ -95,9 +73,6 @@ async function rightSpeaker() {
         $('#scanAudio').prop('checked', false);
 
         console.log("目前尚未連接藍芽喇叭，預設用雙聲道播放右邊聲音。");
-        leftVolume = 1;
-        rightVolume = 0;
-        updateVolume();
         return;
     } else {
         valueStr = 'RIGHT';
