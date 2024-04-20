@@ -7,4 +7,4 @@ The functionality of the auditory localization learning operation page for teach
 For audio playback hardware devices on the auditory localization learning operation page, multi-channel Bluetooth speakers and projectors are utilized. The webpage utilizes Web Bluetooth API for Bluetooth functionality, enabling the web application to pair with nearby Bluetooth devices and exchange data and control. For projection functionality, Presentation API is used, allowing the web application to connect to external screens or projectors, establish projection or presentation features within the webpage, and control the content displayed on the screen through webpage components.
 The Presentation API requires two pages: the control page and the projection page. Devices must be connected to external screens or projectors to utilize this API. The projection page defaults to a black background before playback begins, minimizing distractions for the subject, allowing randomized directional training videos to be played subtly and naturally.
 
-Display URL：https://iamaicho.github.io/selfLearnNew.github.io/
+Display URL：https://iamaicho.github.io/selfLearn.github.io/
